@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,15 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/' , HomeController::class)->name('home');
+Route::get('/courses/{course:slug}' , [CourseController::class , 'show'])
+            ->name('courses.show');
+
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::post("/enroll" ,  [CourseController::class , 'enroll'])
+        ->name('courses.enroll');
+});
+
 
 //Route::get('/dashboard', function () {
 //    return view('dashboard');
