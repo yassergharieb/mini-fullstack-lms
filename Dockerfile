@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.4-fpm-bookworm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -11,7 +11,10 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     libicu-dev \
-    libpq-dev
+    libpq-dev \
+    default-mysql-client \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install \
@@ -26,6 +29,6 @@ RUN docker-php-ext-install \
 RUN pecl install redis && docker-php-ext-enable redis
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www

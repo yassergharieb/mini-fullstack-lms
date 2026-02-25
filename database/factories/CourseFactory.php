@@ -24,6 +24,7 @@ class CourseFactory extends Factory
             'slug' => \Illuminate\Support\Str::slug($name),
             'level_id' => \App\Models\Level::factory(),
             'created_by' => \App\Models\User::factory(),
+             "price" => "100"
         ];
     }
 }
