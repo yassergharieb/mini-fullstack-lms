@@ -13,15 +13,15 @@ class EnrollmentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('view_any_enrollment');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Enrollment $enrollment): bool
+    public function view(User $user): bool
     {
-        return false;
+        return $user->can('view_enrollment');
     }
 
     /**
@@ -29,38 +29,38 @@ class EnrollmentPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('create_enrollment');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Enrollment $enrollment): bool
+    public function update(User $user): bool
     {
-        return false;
+        return $user->can('update_enrollment');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Enrollment $enrollment): bool
+    public function delete(User $user): bool
     {
-        return false;
+        return $user->can('delete_enrollment');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Enrollment $enrollment): bool
+    public function restore(User $user): bool
     {
-        return false;
+        return $user->can('restore_enrollment');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Enrollment $enrollment): bool
+    public function forceDelete(User $user): bool
     {
-        return false;
+        return $user->can('force_delete_enrollment');
     }
 }
