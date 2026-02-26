@@ -19,9 +19,23 @@ class CourseController extends Controller
     }
 
 
-    public function enroll(StoreEnrollmentRequest $request , $course_id)
-    {
+    protected $enrollmentService;
 
+    public function __construct(\App\Services\EnrollmentService $enrollmentService)
+    {
+        $this->enrollmentService = $enrollmentService;
+    }
+
+    public function enroll(StoreEnrollmentRequest $request, $slug)
+    {
+        $course = Course::where('slug', $slug)->firstOrFail();
+        
+        try {
+            $this->enrollmentService->enroll(auth()->user(), $course);
+            return redirect()->route('courses.play', $course->slug)->with('success', 'Enrolled successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
 
