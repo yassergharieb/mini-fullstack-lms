@@ -9,11 +9,7 @@
         <p style="color: var(--text-muted); font-size: 0.85rem;">{{ $description }}</p>
         <div class="course-info">
             <span class="course-price">{{ $price }}</span>
-            <form action="{{ route('courses.enroll') }}" method="POST">
-                @csrf
-                <input type="hidden" name="slug" value="{{ $slug }}">
-                <button type="submit" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Enroll</button>
-            </form>
+                <a href="{{route('courses.enroll' , $slug)}}" type="submit" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Enroll</a>
         </div>
     </div>
 </div>

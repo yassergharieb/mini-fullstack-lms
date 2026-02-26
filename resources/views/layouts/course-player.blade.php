@@ -88,6 +88,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const players = Plyr.setup('.player');
+
         });
     </script>
 </body>
