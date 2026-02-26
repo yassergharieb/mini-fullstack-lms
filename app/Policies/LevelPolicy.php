@@ -13,15 +13,15 @@ class LevelPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('view_any_level');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Level $level): bool
+    public function view(User $user): bool
     {
-        return false;
+        return $user->can('view_level');
     }
 
     /**
@@ -29,38 +29,38 @@ class LevelPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('create_level');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Level $level): bool
+    public function update(User $user): bool
     {
-        return false;
+        return $user->can('update_level');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Level $level): bool
+    public function delete(User $user): bool
     {
-        return false;
+        return $user->can('delete_level');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Level $level): bool
+    public function restore(User $user): bool
     {
-        return false;
+        return $user->can('restore_level');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Level $level): bool
+    public function forceDelete(User $user): bool
     {
-        return false;
+        return $user->can('force_delete_level');
     }
 }

@@ -13,15 +13,15 @@ class LessonProgressPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('view_any_lesson_progress');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, LessonProgress $lessonProgress): bool
+    public function view(User $user): bool
     {
-        return false;
+        return $user->can('view_lesson_progress');
     }
 
     /**
@@ -29,38 +29,38 @@ class LessonProgressPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->can('create_lesson_progress');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, LessonProgress $lessonProgress): bool
+    public function update(User $user): bool
     {
-        return false;
+        return $user->can('update_lesson_progress');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, LessonProgress $lessonProgress): bool
+    public function delete(User $user): bool
     {
-        return false;
+        return $user->can('delete_lesson_progress');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, LessonProgress $lessonProgress): bool
+    public function restore(User $user): bool
     {
-        return false;
+        return $user->can('restore_lesson_progress');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, LessonProgress $lessonProgress): bool
+    public function forceDelete(User $user): bool
     {
-        return false;
+        return $user->can('force_delete_lesson_progress');
     }
 }

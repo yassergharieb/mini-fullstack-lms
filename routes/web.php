@@ -17,6 +17,9 @@ Route::get('/courses/{course:slug}' , [CourseController::class , 'show'])
 Route::group(['middleware' => ['auth']], function () {
     Route::post("/enroll" ,  [CourseController::class , 'enroll'])
         ->name('courses.enroll');
+
+    Route::get('/courses/{course:slug}/play/{lesson:slug?}' , [CourseController::class , 'play'])
+        ->name('courses.play');
 });
 
 
