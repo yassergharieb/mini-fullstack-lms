@@ -4,7 +4,7 @@
         <div class="nav-links">
             <a href="{{ url('/') }}" class="nav-link">Home</a>
             @auth
-                <a href="#" class="nav-link">My Courses</a>
+                <a href="{{ route('courses.index') }}" class="nav-link">My Courses</a>
                 <span style="color: var(--text-muted); font-size: 0.9rem;">{{ Auth::user()->name }}</span>
                 <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                     @csrf

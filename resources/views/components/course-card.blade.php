@@ -9,7 +9,11 @@
         <p style="color: var(--text-muted); font-size: 0.85rem;">{{ $description }}</p>
         <div class="course-info">
             <span class="course-price">{{ $price }}</span>
-                <a href="{{route('courses.enroll' , $slug)}}" type="submit" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Enroll</a>
+            @if($price === 'Enrolled')
+                <a href="{{ route('courses.play', $slug) }}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Start Learning</a>
+            @else
+                <a href="{{ route('courses.enroll', $slug) }}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Enroll</a>
+            @endif
         </div>
     </div>
 </div>

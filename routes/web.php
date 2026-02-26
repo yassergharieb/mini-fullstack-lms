@@ -15,6 +15,9 @@ Route::get('/courses/{course:slug}' , [CourseController::class , 'show'])
 
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get("/my-courses" ,  [CourseController::class , 'index'])
+        ->name('courses.index');
+        
     Route::get("/enroll/{course:slug}" ,  [CourseController::class , 'enroll'])
         ->name('courses.enroll');
 

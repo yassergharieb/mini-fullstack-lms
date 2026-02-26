@@ -17,7 +17,12 @@ class CourseController extends Controller
      */
     public function index()
     {
+        $courses = auth()->user()->enrollments()
+            ->with(['course.level', 'course.creator'])
+            ->get()
+            ->pluck('course');
 
+        return view('courses.index', compact('courses'));
     }
 
 
