@@ -20,6 +20,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/courses/{course:slug}/play/{lesson:slug?}' , [CourseController::class , 'play'])
         ->name('courses.play');
+
+    Route::post('/lessons/progress', [\App\Http\Controllers\LessonProgressController::class, 'updateProgress'])
+        ->name('lessons.progress.update');
 });
 
 

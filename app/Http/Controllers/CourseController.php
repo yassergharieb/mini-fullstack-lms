@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEnrollmentRequest;
 use App\Models\Course;
-use  App\Models\Lesson;
+use App\Models\Lesson;
+use App\Models\LessonProgress;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use Illuminate\Http\Request;
@@ -21,10 +22,14 @@ class CourseController extends Controller
 
 
     protected $enrollmentService;
+    protected $progressService;
 
-    public function __construct(\App\Services\EnrollmentService $enrollmentService)
-    {
+    public function __construct(
+        \App\Services\EnrollmentService $enrollmentService,
+        \App\Services\ProgressService $progressService
+    ) {
         $this->enrollmentService = $enrollmentService;
+        $this->progressService = $progressService;
     }
 
     public function enroll(StoreEnrollmentRequest $request, $slug)
@@ -56,11 +61,20 @@ class CourseController extends Controller
         $nextLesson = $course->lessons->where('order', '>', $lesson->order)->sortBy('order')->first();
         $previousLesson = $course->lessons->where('order', '<', $lesson->order)->sortByDesc('order')->first();
 
+        $completedLessonsCount = \App\Models\LessonProgress::where('user_id', auth()->id())
+            ->whereIn('lesson_id', $course->lessons->pluck('id'))
+            ->whereNotNull('completed_at')
+            ->count();
+        
+        $percentage = $this->progressService->getCourseProgress(auth()->user(), $course);
+
         return view('course', [
             'course' => $course,
             'currentLesson' => $lesson,
             'nextLesson' => $nextLesson,
             'previousLesson' => $previousLesson,
+            'completedCount' => $completedLessonsCount,
+            'percentage' => $percentage,
         ]);
     }
 

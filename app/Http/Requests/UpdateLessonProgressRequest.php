@@ -11,7 +11,7 @@ class UpdateLessonProgressRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class UpdateLessonProgressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'lesson_id' => 'required|exists:lessons,id',
+            'watch_seconds' => 'required|integer|min:0',
         ];
     }
 }

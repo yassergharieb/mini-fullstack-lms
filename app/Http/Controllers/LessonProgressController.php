@@ -8,59 +8,27 @@ use App\Http\Requests\UpdateLessonProgressRequest;
 
 class LessonProgressController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $progressService;
+
+    public function __construct(\App\Services\ProgressService $progressService)
     {
-        //
+        $this->progressService = $progressService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function updateProgress(UpdateLessonProgressRequest $request)
     {
-        //
-    }
+        $lesson = \App\Models\Lesson::findOrFail($request->lesson_id);
+        
+        $progress = $this->progressService->updateProgress(
+            auth()->user(),
+            $lesson,
+            $request->watch_seconds
+        );
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreLessonProgressRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(LessonProgress $lessonProgress)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(LessonProgress $lessonProgress)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateLessonProgressRequest $request, LessonProgress $lessonProgress)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(LessonProgress $lessonProgress)
-    {
-        //
+        return response()->json([
+            'status' => 'success',
+            'completed' => $progress->completed_at !== null,
+            'progress' => $this->progressService->getCourseProgress(auth()->user(), $lesson->course)
+        ]);
     }
 }

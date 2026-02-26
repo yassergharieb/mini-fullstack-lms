@@ -87,9 +87,9 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const players = Plyr.setup('.player');
-
+            window.playerInstances = Plyr.setup('.player');
         });
     </script>
+    @stack('scripts')
 </body>
 </html>
