@@ -88,14 +88,19 @@ class CourseController extends Controller
     {
         $course->load(['level', 'creator']);
 
+        $isEnrolled = false;
+        if (auth()->check()) {
+            $isEnrolled = $this->enrollmentService->isEnrolled(auth()->user(), $course);
+        }
+
         $lessons = $course->lessons()
-            ->when(!auth()->check(), function ($query) {
+            ->when(!$isEnrolled, function ($query) {
                 return $query->where('is_free_preview', true);
             })
             ->orderBy('order')
             ->get();
 
-        return view('courses.show', compact('course', 'lessons'));
+        return view('courses.show', compact('course', 'lessons', 'isEnrolled'));
     }
 
 }

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
-Route::get('/' , HomeController::class)->name('home');
+Route::get('/' , [HomeController::class, 'home'])->name('home');
 Route::get('/courses/{course:slug}' , [CourseController::class , 'show'])
             ->name('courses.show');
 

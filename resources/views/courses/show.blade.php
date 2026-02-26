@@ -100,13 +100,15 @@
 
                 <div style="display: grid; gap: 0.75rem;">
                     @auth
-                        <a href="{{ route('courses.play', $course->slug) }}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Start Learning</a>
+                        @if($isEnrolled)
+                            <a href="{{ route('courses.play', $course->slug) }}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Continue Learning</a>
+                        @else
+                            <form action="{{ route('courses.enroll', $course->slug) }}" method="GET">
+                                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Enroll Now</button>
+                            </form>
+                        @endif
                     @else
-                        <form action="{{ route('courses.enroll') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="slug" value="{{ $course->slug }}">
-                            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Enroll Now</button>
-                        </form>
+                        <a href="{{ route('login') }}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Enroll Now</a>
                     @endauth
                     <button class="btn btn-outline" style="width: 100%; justify-content: center; padding: 1rem;">Add to Cart</button>
                 </div>

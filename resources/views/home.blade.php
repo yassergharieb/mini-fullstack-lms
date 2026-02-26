@@ -16,12 +16,15 @@
 
             <div class="course-grid" id="course-grid">
                 @forelse($courses as $course)
+                    @php
+                        $isEnrolled = in_array($course->id, $enrolledCourseIds ?? []);
+                    @endphp
                     @include('components.course-card', [
                         'cover_image' => $course->cover_image,
                         'level' => $course->level->name,
                         'name' => $course->name,
                         'description' => Str::limit($course->description, 80),
-                        'price' => $course->price > 0 ? '$' . number_format($course->price, 2) : 'Free',
+                        'price' => $isEnrolled ? 'Enrolled' : ($course->price > 0 ? '$' . number_format($course->price, 2) : 'Free'),
                         'slug' => $course->slug,
                         'style' => 'animation-delay: ' . ($loop->index * 0.1) . 's;'
                     ])

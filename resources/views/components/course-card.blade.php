@@ -10,7 +10,7 @@
         <div class="course-info">
             <span class="course-price">{{ $price }}</span>
             @if($price === 'Enrolled')
-                <a href="{{ route('courses.play', $slug) }}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Start Learning</a>
+                <a href="{{ route('courses.play', $slug) }}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Continue Learning</a>
             @else
                 <a href="{{ route('courses.enroll', $slug) }}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Enroll</a>
             @endif
