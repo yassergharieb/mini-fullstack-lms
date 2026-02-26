@@ -17,12 +17,28 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = auth()->user()->enrollments()
+        $user = auth()->user();
+        $enrollments = $user->enrollments()
             ->with(['course.level', 'course.creator'])
-            ->get()
-            ->pluck('course');
+            ->get();
+            
+        $courses = $enrollments->pluck('course');
 
-        return view('courses.index', compact('courses'));
+        // Dashboard Stats
+        $totalCourses = $courses->count();
+        
+        $completedLessonsCount = \App\Models\LessonProgress::where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->count();
+            
+        $totalProgress = 0;
+        foreach ($courses as $course) {
+            $totalProgress += $this->progressService->getCourseProgress($user, $course);
+        }
+        
+        $avgProgress = $totalCourses > 0 ? round($totalProgress / $totalCourses) : 0;
+
+        return view('courses.index', compact('courses', 'totalCourses', 'completedLessonsCount', 'avgProgress'));
     }
 
 
