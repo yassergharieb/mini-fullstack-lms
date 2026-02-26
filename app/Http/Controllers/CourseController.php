@@ -28,18 +28,16 @@ class CourseController extends Controller
 
     public function show(Course $course)
     {
-        $course->load(['level', 'lessons' => function($query) {
-            $query->orderBy('order');
-        }]);
+        $course->load(['level', 'creator']);
 
-        $isEnrolled = auth()->check() && auth()->user()->enrollments()->where('course_id', $course->id)->exists();
+        $lessons = $course->lessons()
+            ->when(!auth()->check(), function ($query) {
+                return $query->where('is_free_preview', true);
+            })
+            ->orderBy('order')
+            ->get();
 
-        if ($isEnrolled) {
-            $currentLesson = $course->lessons()->first(); // Default to first lesson for now
-            return view('course', compact('course', 'currentLesson'));
-        }
-
-        return view('courses.show', compact('course'));
+        return view('courses.show', compact('course', 'lessons'));
     }
 
 }

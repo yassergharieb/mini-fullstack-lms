@@ -81,13 +81,8 @@
                 {{ $course->description }}
             </p>
             
-            <div style="display: flex; align-items: center; gap: 1.5rem; font-size: 0.95rem;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="color: var(--accent-color); font-weight: 700;">4.8 ★★★★★</span>
-                    <span style="color: var(--text-muted)">(2,450 ratings)</span>
-                </div>
-                <div style="color: var(--text-muted);">15,420 students enrolled</div>
-            </div>
+            {{-- Removed static ratings and student counts as they are not in the DB --}}
+
             
             <div style="margin-top: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
                 <span style="color: var(--text-muted);">Created by</span>
@@ -101,10 +96,6 @@
             <div style="padding: 1.5rem;">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
                     <span style="font-size: 2rem; font-weight: 800;">${{ number_format($course->price, 2) }}</span>
-                    @if($course->price > 0)
-                        <span style="text-decoration: line-through; color: var(--text-muted);">$199.99</span>
-                        <span style="color: var(--secondary-color); font-weight: 700; font-size: 0.9rem;">85% off</span>
-                    @endif
                 </div>
 
                 <div style="display: grid; gap: 0.75rem;">
@@ -125,16 +116,9 @@
                     <ul style="display: grid; gap: 0.5rem;">
                         <li style="display: flex; align-items: center; gap: 0.75rem;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12H2M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-                            <span>{{ $course->lessons->count() }} on-demand lessons</span>
+                            <span>{{ count($lessons) }} on-demand lessons</span>
                         </li>
-                        <li style="display: flex; align-items: center; gap: 0.75rem;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            <span>12 downloadable resources</span>
-                        </li>
-                        <li style="display: flex; align-items: center; gap: 0.75rem;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            <span>Certificate of completion</span>
-                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -150,13 +134,14 @@
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">
                 <div>
-                    {{ $course->lessons->count() }} lessons • {{ floor($course->lessons->sum('duration') / 60) }}h {{ $course->lessons->sum('duration') % 60 }}m total length
+                    {{ count($lessons) }} lessons • {{ floor($lessons->sum('duration') / 60) }}h {{ $lessons->sum('duration') % 60 }}m total length
                 </div>
+
                 <button style="background: none; border: none; color: var(--primary-color); font-weight: 600; cursor: pointer;">Expand all sections</button>
             </div>
 
             <div class="curriculum-list">
-                @foreach($course->lessons as $lesson)
+                @foreach($lessons as $lesson)
                     <div class="curriculum-item">
                         <div class="lesson-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -167,7 +152,7 @@
                                 <span style="font-size: 0.85rem; color: var(--text-muted);">{{ floor($lesson->duration / 60) }}:{{ str_pad($lesson->duration % 60, 2, '0', STR_PAD_LEFT) }}</span>
                             </div>
                             @if($lesson->is_free_preview)
-                                <a href="#" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: underline;">Preview</a>
+                                <a href="#" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: underline;">Free Preview</a>
                             @endif
                         </div>
                     </div>
@@ -175,33 +160,14 @@
             </div>
         </section>
 
-        <!-- Requirements -->
-        <section style="margin-bottom: 4rem;">
-            <h2 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 1.5rem;">Requirements</h2>
-            <ul style="display: grid; gap: 0.75rem; color: var(--text-muted); line-height: 1.6;">
-                <li style="display: flex; gap: 1rem;">
-                    <span>•</span>
-                    <span>Basic understanding of programming concepts</span>
-                </li>
-                <li style="display: flex; gap: 1rem;">
-                    <span>•</span>
-                    <span>A computer with internet access</span>
-                </li>
-            </ul>
-        </section>
+        {{-- Removed static requirements section --}}
+
 
         <!-- Description -->
         <section>
             <h2 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 1.5rem;">Description</h2>
             <div style="color: var(--text-muted); line-height: 1.8;">
-                {!! nl2br(e($course->description)) !!}
-                
-                <p style="margin-top: 1.5rem;">
-                    Unlock your potential with this comprehensive course designed to take you from a beginner to an expert. Whether you're looking to start a new career or enhance your current skills, this course provides everything you need to succeed.
-                </p>
-                <p style="margin-top: 1rem;">
-                    With hands-on projects, real-world examples, and expert guidance, you'll gain practical experience that you can apply immediately. Join thousands of satisfied students and begin your learning journey today!
-                </p>
+                {!! $course->description !!}
             </div>
         </section>
     </div>
