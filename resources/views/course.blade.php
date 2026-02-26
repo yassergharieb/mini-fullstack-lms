@@ -27,13 +27,15 @@
             <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 1rem;">
                 Curriculum</h4>
             @foreach($course->lessons as $lesson)
-                @include('components.lesson-item', [
-                    'status' => ($currentLesson && $lesson->id === $currentLesson->id) ? 'active' : '',
-                    'index' => str_pad($loop->iteration, 2, '0', STR_PAD_LEFT),
-                    'title' => $lesson->title,
-                    'type' => 'Video',
-                    'duration' => floor($lesson->duration / 60) . ':' . str_pad($lesson->duration % 60, 2, '0', STR_PAD_LEFT)
-                ])
+                <a href="{{ route('courses.play', [$course->slug, $lesson->slug]) }}" style="text-decoration: none; color: inherit; display: block;">
+                    @include('components.lesson-item', [
+                        'status' => ($currentLesson && $lesson->id === $currentLesson->id) ? 'active' : '',
+                        'index' => str_pad($loop->iteration, 2, '0', STR_PAD_LEFT),
+                        'title' => $lesson->title,
+                        'type' => 'Video',
+                        'duration' => floor($lesson->duration / 60) . ':' . str_pad($lesson->duration % 60, 2, '0', STR_PAD_LEFT)
+                    ])
+                </a>
             @endforeach
         </div>
     </aside>
@@ -43,14 +45,9 @@
         <div style="max-width: 1000px; margin: 0 auto;">
             <div class="video-player-container glass-card">
                 @if($currentLesson && $currentLesson->video_url)
-                    <iframe src="{{ $currentLesson->video_url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="player" data-plyr-provider="vimeo" data-plyr-embed-id="{{ $currentLesson->video_url }}"></div>
                 @else
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; background: linear-gradient(135deg, #1e293b, #0f172a);">
-                        <div style="width: 80px; height: 80px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transform: translate3d(0, 0, 0); transition: 0.3s ease;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </div>
                         <p style="margin-top: 1rem; font-weight: 600; color: var(--text-muted);">Select a lesson to start</p>
                     </div>
                 @endif
@@ -60,8 +57,17 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h1 style="font-size: 1.75rem; font-weight: 800;">{{ $currentLesson->title ?? 'Welcome' }}</h1>
                     <div style="display: flex; gap: 1rem;">
-                        <button class="btn btn-outline" style="padding: 0.5rem 1rem;">← Previous</button>
-                        <button class="btn btn-primary" style="padding: 0.5rem 1rem;">Next Lesson →</button>
+                        @if($previousLesson)
+                            <a href="{{ route('courses.play', [$course->slug, $previousLesson->slug]) }}" class="btn btn-outline" style="padding: 0.5rem 1rem;">← Previous</a>
+                        @else
+                            <button class="btn btn-outline" style="padding: 0.5rem 1rem; opacity: 0.5; cursor: not-allowed;" disabled>← Previous</button>
+                        @endif
+
+                        @if($nextLesson)
+                            <a href="{{ route('courses.play', [$course->slug, $nextLesson->slug]) }}" class="btn btn-primary" style="padding: 0.5rem 1rem;">Next Lesson →</a>
+                        @else
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; opacity: 0.5; cursor: not-allowed;" disabled>Next Lesson →</button>
+                        @endif
                     </div>
                 </div>
 

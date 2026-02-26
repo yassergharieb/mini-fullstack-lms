@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     @include('components.head')
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <style>
         .sidebar-lesson {
             padding: 1rem;
@@ -73,7 +74,7 @@
                 </span>
             </div>
             <div class="nav-links">
-                <a href="{{ url('/') }}" class="btn btn-outline" style="padding: 0.5rem 1rem;">Exit Course</a>
+                <a href="{{ route('courses.show', $course->slug) }}" class="btn btn-outline" style="padding: 0.5rem 1rem;">Exit Course</a>
             </div>
         </div>
     </nav>
@@ -83,5 +84,11 @@
     </div>
 
     @include('components.scripts')
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const players = Plyr.setup('.player');
+        });
+    </script>
 </body>
 </html>

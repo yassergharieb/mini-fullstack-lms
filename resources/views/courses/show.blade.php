@@ -99,11 +99,15 @@
                 </div>
 
                 <div style="display: grid; gap: 0.75rem;">
-                    <form action="{{ route('courses.enroll') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="slug" value="{{ $course->slug }}">
-                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Enroll Now</button>
-                    </form>
+                    @auth
+                        <a href="{{ route('courses.play', $course->slug) }}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Start Learning</a>
+                    @else
+                        <form action="{{ route('courses.enroll') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="slug" value="{{ $course->slug }}">
+                            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Enroll Now</button>
+                        </form>
+                    @endauth
                     <button class="btn btn-outline" style="width: 100%; justify-content: center; padding: 1rem;">Add to Cart</button>
                 </div>
 
@@ -142,20 +146,27 @@
 
             <div class="curriculum-list">
                 @foreach($lessons as $lesson)
-                    <div class="curriculum-item">
-                        <div class="lesson-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                        </div>
-                        <div style="flex: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: start;">
-                                <h4 style="font-weight: 600;">{{ $lesson->title }}</h4>
-                                <span style="font-size: 0.85rem; color: var(--text-muted);">{{ floor($lesson->duration / 60) }}:{{ str_pad($lesson->duration % 60, 2, '0', STR_PAD_LEFT) }}</span>
+                    @php
+                        $canView = auth()->check() || $lesson->is_free_preview;
+                    @endphp
+                    <a href="{{ $canView ? route('courses.play', [$course->slug, $lesson->slug]) : '#' }}" 
+                       style="text-decoration: none; color: inherit; display: block;"
+                       @if(!$canView) onclick="alert('Please enroll to view this lesson.'); return false;" @endif>
+                        <div class="curriculum-item">
+                            <div class="lesson-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                             </div>
-                            @if($lesson->is_free_preview)
-                                <a href="#" style="font-size: 0.8rem; color: var(--primary-color); text-decoration: underline;">Free Preview</a>
-                            @endif
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: start;">
+                                    <h4 style="font-weight: 600;">{{ $lesson->title }}</h4>
+                                    <span style="font-size: 0.85rem; color: var(--text-muted);">{{ floor($lesson->duration / 60) }}:{{ str_pad($lesson->duration % 60, 2, '0', STR_PAD_LEFT) }}</span>
+                                </div>
+                                @if($lesson->is_free_preview)
+                                    <span style="font-size: 0.8rem; color: var(--primary-color); text-decoration: underline;">Free Preview</span>
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </section>
