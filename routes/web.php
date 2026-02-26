@@ -18,7 +18,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get("/my-courses" ,  [CourseController::class , 'index'])
         ->name('courses.index');
         
-    Route::get("/enroll/{course:slug}" ,  [CourseController::class , 'enroll'])
+    Route::post("/enroll/{course:slug}" ,  [CourseController::class , 'enroll'])
         ->name('courses.enroll');
 
     Route::get('/courses/{course:slug}/play/{lesson:slug?}' , [CourseController::class , 'play'])
@@ -29,9 +29,9 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -18,17 +18,23 @@ class LessonProgressController extends Controller
     public function updateProgress(UpdateLessonProgressRequest $request)
     {
         $lesson = \App\Models\Lesson::findOrFail($request->lesson_id);
-        
+        $user = auth()->user();
+
+        $watchSeconds = $request->watch_seconds;
+        if ($request->boolean('force_complete')) {
+            $watchSeconds = $lesson->duration;
+        }
+
         $progress = $this->progressService->updateProgress(
-            auth()->user(),
+            $user,
             $lesson,
-            $request->watch_seconds
+            $watchSeconds
         );
 
         return response()->json([
             'status' => 'success',
             'completed' => $progress->completed_at !== null,
-            'progress' => $this->progressService->getCourseProgress(auth()->user(), $lesson->course)
+            'progress' => $this->progressService->getCourseProgress($user, $lesson->course)
         ]);
     }
 }

@@ -13,19 +13,21 @@ class ProgressService
 {
     public function markLessonAsComplete(User $user, Lesson $lesson): LessonProgress
     {
-        $progress = LessonProgress::updateOrCreate(
-            [
-                'user_id' => $user->id,
-                'lesson_id' => $lesson->id,
-            ],
-            [
-                'completed_at' => Carbon::now(),
-            ]
-        );
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($user, $lesson) {
+            $progress = LessonProgress::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'lesson_id' => $lesson->id,
+                ],
+                [
+                    'completed_at' => Carbon::now(),
+                ]
+            );
 
-        $this->checkAndMarkCourseAsCompleted($user, $lesson->course);
+            $this->checkAndMarkCourseAsCompleted($user, $lesson->course);
 
-        return $progress;
+            return $progress;
+        });
     }
 
     public function getCourseProgress(User $user, Course $course): int
@@ -46,10 +48,16 @@ class ProgressService
         $progress = $this->getCourseProgress($user, $course);
 
         if ($progress === 100) {
-            return CourseCompletion::firstOrCreate([
+            $completion = CourseCompletion::firstOrCreate([
                 'user_id' => $user->id,
                 'course_id' => $course->id,
             ]);
+
+            if ($completion->wasRecentlyCreated) {
+                \App\Jobs\SendCourseCompletionEmailJob::dispatch($user, $course);
+            }
+
+            return $completion;
         }
 
         return null;
@@ -57,24 +65,30 @@ class ProgressService
 
     public function updateProgress(User $user, Lesson $lesson, int $watchSeconds): LessonProgress
     {
-        $progress = LessonProgress::updateOrCreate(
-            [
-                'user_id' => $user->id,
-                'lesson_id' => $lesson->id,
-            ],
-            [
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($user, $lesson, $watchSeconds) {
+            $progress = LessonProgress::firstOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'lesson_id' => $lesson->id,
+                ],
+                [
+                    'started_at' => Carbon::now(),
+                ]
+            );
+
+            $progress->update([
                 'watch_seconds' => $watchSeconds,
-            ]
-        );
+            ]);
 
-        // Mark as complete if 95% or more
-        if ($lesson->duration > 0 && ($watchSeconds / $lesson->duration) >= 0.95) {
-            if (!$progress->completed_at) {
-                $progress->update(['completed_at' => Carbon::now()]);
-                $this->checkAndMarkCourseAsCompleted($user, $lesson->course);
+            // Mark as complete if 95% or more
+            if ($lesson->duration > 0 && ($watchSeconds / $lesson->duration) >= 0.95) {
+                if (!$progress->completed_at) {
+                    $progress->update(['completed_at' => Carbon::now()]);
+                    $this->checkAndMarkCourseAsCompleted($user, $lesson->course);
+                }
             }
-        }
 
-        return $progress;
+            return $progress;
+        });
     }
 }

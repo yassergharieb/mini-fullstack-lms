@@ -24,6 +24,7 @@ class UpdateLessonProgressRequest extends FormRequest
         return [
             'lesson_id' => 'required|exists:lessons,id',
             'watch_seconds' => 'required|integer|min:0',
+            'force_complete' => 'sometimes|boolean',
         ];
     }
 }

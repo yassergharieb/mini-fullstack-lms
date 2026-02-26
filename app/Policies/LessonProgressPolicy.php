@@ -19,9 +19,9 @@ class LessonProgressPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user): bool
+    public function view(User $user, LessonProgress $lessonProgress): bool
     {
-        return $user->can('view_lesson_progress');
+        return $user->id === $lessonProgress->user_id || $user->can('view_lesson_progress');
     }
 
     /**
@@ -35,17 +35,17 @@ class LessonProgressPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user): bool
+    public function update(User $user, LessonProgress $lessonProgress): bool
     {
-        return $user->can('update_lesson_progress');
+        return $user->id === $lessonProgress->user_id || $user->can('update_lesson_progress');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user): bool
+    public function delete(User $user, LessonProgress $lessonProgress): bool
     {
-        return $user->can('delete_lesson_progress');
+        return $user->id === $lessonProgress->user_id || $user->can('delete_lesson_progress');
     }
 
     /**

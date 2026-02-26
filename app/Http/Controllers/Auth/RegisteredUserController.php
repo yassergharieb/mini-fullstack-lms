@@ -41,6 +41,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        \App\Jobs\SendWelcomeEmailJob::dispatch($user);
+
         event(new Registered($user));
 
         Auth::login($user);

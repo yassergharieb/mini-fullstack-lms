@@ -24,7 +24,15 @@ class CourseFactory extends Factory
             'slug' => \Illuminate\Support\Str::slug($name),
             'level_id' => \App\Models\Level::factory(),
             'created_by' => \App\Models\User::factory(),
-             "price" => "100"
+             "price" => "100",
+             "is_published" => false,
         ];
+    }
+
+    public function published(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_published' => true,
+        ]);
     }
 }

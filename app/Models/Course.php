@@ -16,8 +16,14 @@ class Course extends Model
         'cover_image',
         'slug',
         'level_id',
-        'created_by'
+        'created_by',
+        'is_published'
     ];
+
+    public function scopePublished($query)
+    {
+        return $query->where('is_published', true);
+    }
 
     public function level()
     {

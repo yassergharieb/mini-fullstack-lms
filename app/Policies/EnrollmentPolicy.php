@@ -19,9 +19,9 @@ class EnrollmentPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user): bool
+    public function view(User $user, Enrollment $enrollment): bool
     {
-        return $user->can('view_enrollment');
+        return $user->id === $enrollment->user_id || $user->can('view_enrollment');
     }
 
     /**
@@ -35,17 +35,17 @@ class EnrollmentPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user): bool
+    public function update(User $user, Enrollment $enrollment): bool
     {
-        return $user->can('update_enrollment');
+        return $user->id === $enrollment->user_id || $user->can('update_enrollment');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user): bool
+    public function delete(User $user, Enrollment $enrollment): bool
     {
-        return $user->can('delete_enrollment');
+        return $user->id === $enrollment->user_id || $user->can('delete_enrollment');
     }
 
     /**

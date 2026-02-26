@@ -14,11 +14,11 @@ class EnrollmentService
      */
     public function enroll(User $user, Course $course): Enrollment
     {
-        if ($this->isEnrolled($user, $course)) {
-            throw new Exception("You are already enrolled in this course.");
+        if (!$course->is_published) {
+            throw new Exception("This course is currently a draft and not open for enrollment.");
         }
 
-        return Enrollment::create([
+        return Enrollment::firstOrCreate([
             'user_id' => $user->id,
             'course_id' => $course->id,
         ]);

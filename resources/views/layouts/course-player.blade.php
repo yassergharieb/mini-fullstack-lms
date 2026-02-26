@@ -64,7 +64,10 @@
         }
     </style>
 </head>
-<body style="overflow: hidden;">
+<body x-data="{ darkMode: true }" 
+      x-init="darkMode = JSON.parse(localStorage.getItem('darkMode')) ?? true; $watch('darkMode', value => localStorage.setItem('darkMode', JSON.stringify(value)))"
+      x-bind:class="{ 'light': !darkMode }"
+      style="overflow: hidden;">
     <nav class="navbar">
         <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div style="display: flex; align-items: center; gap: 2rem;">
