@@ -49,7 +49,6 @@ The project is fully containerized using Docker for a consistent development exp
 3.  **Install dependencies and setup**:
     ```bash
     docker exec -it lms_app composer install
-    docker exec -it lms_app npm install && npm run build
     docker exec -it lms_app php artisan migrate:fresh --seed
     ```
 
@@ -58,7 +57,6 @@ The project is fully containerized using Docker for a consistent development exp
     ```bash
     cp .env.example .env
     composer install
-    npm install && npm run build
     ```
 2.  **Setup Database**:
     Ensure you have a local MySQL/SQLite database configured in `.env`, then:
