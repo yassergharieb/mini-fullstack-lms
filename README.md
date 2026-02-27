@@ -51,6 +51,10 @@ The project is fully containerized using Docker for a consistent development exp
     ```bash
     docker exec -it lms_app php artisan migrate:fresh --seed
     ```
+    > [!IMPORTANT]
+    > **Admin Credentials**:
+    > - **Email**: `admin@lms.test`
+    > - **Password**: `password`
 
 ---
 

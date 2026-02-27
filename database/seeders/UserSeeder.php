@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
         $studentRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'student']);
 
         // Create an admin/instructor user
+        // Credentials: admin@lms.test / password
         $admin = User::firstOrCreate([
             'email' => 'admin@lms.test',
         ], [
