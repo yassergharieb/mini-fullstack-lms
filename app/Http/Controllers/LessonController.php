@@ -8,20 +8,45 @@ use App\Http\Requests\UpdateLessonRequest;
 
 class LessonController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $progressService;
+
+    public function __construct(\App\Services\ProgressService $progressService)
     {
-        //
+        $this->progressService = $progressService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function play(\App\Models\Course $course, Lesson $lesson = null)
     {
-        //
+        $course->load(['lessons' => function($query) {
+            $query->orderBy('order');
+        }]);
+
+        if (!$lesson || $lesson->course_id !== $course->id) {
+            $lesson = $course->lessons->first();
+        }
+
+        if (!$lesson) {
+            return redirect()->route('courses.show', $course->slug)->with('error', 'No lessons available.');
+        }
+
+        $nextLesson = $course->lessons->where('order', '>', $lesson->order)->sortBy('order')->first();
+        $previousLesson = $course->lessons->where('order', '<', $lesson->order)->sortByDesc('order')->first();
+
+        $completedLessonsCount = \App\Models\LessonProgress::where('user_id', auth()->id())
+            ->whereIn('lesson_id', $course->lessons->pluck('id'))
+            ->whereNotNull('completed_at')
+            ->count();
+        
+        $percentage = $this->progressService->getCourseProgress(auth()->user(), $course);
+
+        return view('course', [
+            'course' => $course,
+            'currentLesson' => $lesson,
+            'nextLesson' => $nextLesson,
+            'previousLesson' => $previousLesson,
+            'completedCount' => $completedLessonsCount,
+            'percentage' => $percentage,
+        ]);
     }
 
     /**

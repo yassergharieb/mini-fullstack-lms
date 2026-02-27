@@ -1,59 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Mini Fullstack LMS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A powerful and elegant Learning Management System built with **Laravel 11+**, designed for speed, security, and a premium user experience.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   **Seamless Enrollment**: Idempotent enrollment system with draft course protection.
+-   **Granular Progress Tracking**: Real-time lesson tracking with automated course completion detection.
+-   **Advanced Video Player**: Integrated **Plyr.js** for a premium video experience.
+-   **Automated Workflows**: Back-grounded email automation (Welcome & Completion) using Laravel Jobs.
+-   **Security First**: Role-based access control (RBAC) with **Spatie Permission**, securing the admin panel and student data.
+-   **Powerful Admin Panel**: Fully customized **Filament** dashboard with real-time stats and visual charts.
+-   **Comprehensive Testing**: Mission-critical features covered by a robust **Pest** test suite (45+ tests).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🏗️ Technology Stack
 
-## Learning Laravel
+-   **Backend**: Laravel, MySQL, Redis
+-   **Frontend**: Blade, Alpine.js, Vanilla CSS, Plyr.js
+-   **Admin**: Filament PHP
+-   **Security**: Spatie Laravel Permission
+-   **Testing**: Pest PHP
+-   **Emails**: Mailpit (local testing)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🐳 Docker Environment
 
-## Laravel Sponsors
+The project is fully containerized using Docker for a consistent development experience.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Services
+-   **app**: PHP 8.4-FPM (where the application logic runs).
+-   **nginx**: High-performance web server accessible at `http://localhost:8000`.
+-   **mysql**: MySQL 8.0 database (accessible at port `3307` on localhost).
+-   **redis**: Key-value store for caching and queues.
+-   **mailpit**: Local email testing server (Web UI at `http://localhost:8025`).
+-   **phpmyadmin**: Database management UI at `http://localhost:9000`.
 
-### Premium Partners
+### Quick Start
+1.  **Start the environment**:
+    ```bash
+    docker-compose up -d
+    ```
+2.  **Install dependencies**:
+    ```bash
+    docker exec -it lms_app composer install
+    docker exec -it lms_app npm install && npm run build
+    ```
+3.  **Setup Database**:
+    ```bash
+    docker exec -it lms_app php artisan migrate:fresh --seed
+    ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 🛠️ Developer Guide
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Authentication & Roles
+-   **Super Admin**: Has full access to the Filament Dashboard (`/admin`).
+-   **Student**: Default role for new registrations. Prevented from accessing the admin panel.
+-   **Default Admin Credentials**:
+    -   **Email**: `admin@lms.test`
+    -   **Password**: `password`
 
-## Code of Conduct
+### Background Jobs
+We use Laravel's background processing for heavy tasks:
+-   **SendWelcomeEmailJob**: Sent immediately upon registration.
+-   **SendCourseCompletionEmailJob**: Sent when a student finishes the last lesson.
+-   **UploadVideoJob**: Handles lesson video storage and notification in a non-blocking way.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+To process jobs locally:
+```bash
+php artisan queue:work
+```
 
-## Security Vulnerabilities
+### Running Tests
+Our test suite ensures data integrity and security:
+```bash
+php artisan test
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 📉 Admin Dashboard
+The dashboard provides a birds-eye view of your LMS:
+-   **Stats Overview**: Real-time tracking of Total Students, Courses, and Completion Rates.
+-   **Popular Courses Chart**: Visual bar chart showing enrollment distribution.
+-   **Detailed Relations**: Manage students and track their progress percentage directly from the Course edit page.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 📂 Project Structure
+-   `app/Services`: Core business logic (Enrollment, Progress).
+-   `app/Jobs`: Non-blocking automated tasks.
+-   `app/Filament`: Admin panel configuration and custom widgets.
+-   `tests/Feature`: Pest feature and logic tests.
+
+---
+
+## 📝 License
+This project is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).

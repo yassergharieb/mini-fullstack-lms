@@ -15,13 +15,13 @@ Route::get('/courses/{course:slug}' , [CourseController::class , 'show'])
 
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get("/my-courses" ,  [CourseController::class , 'index'])
+    Route::get("/my-courses" ,  [\App\Http\Controllers\EnrollmentController::class , 'index'])
         ->name('courses.index');
         
-    Route::post("/enroll/{course:slug}" ,  [CourseController::class , 'enroll'])
+    Route::post("/enroll/{course:slug}" ,  [\App\Http\Controllers\EnrollmentController::class , 'enroll'])
         ->name('courses.enroll');
 
-    Route::get('/courses/{course:slug}/play/{lesson:slug?}' , [CourseController::class , 'play'])
+    Route::get('/courses/{course:slug}/play/{lesson:slug?}' , [\App\Http\Controllers\LessonController::class , 'play'])
         ->name('courses.play');
 
     Route::post('/lessons/progress', [\App\Http\Controllers\LessonProgressController::class, 'updateProgress'])
