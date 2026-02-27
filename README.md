@@ -37,23 +37,39 @@ The project is fully containerized using Docker for a consistent development exp
 -   **mailpit**: Local email testing server (Web UI at `http://localhost:8025`).
 -   **phpmyadmin**: Database management UI at `http://localhost:9000`.
 
-### Quick Start
-1.  **Install dependencies locally**:
+### 🐳 Option 1: Docker (Recommended)
+1.  **Clone and prepare environment**:
     ```bash
-    composer install
+    cp .env.example .env
     ```
 2.  **Start the environment**:
     ```bash
     docker-compose up -d
     ```
-3.  **Setup Database**:
+3.  **Install dependencies and setup**:
     ```bash
+    docker exec -it lms_app composer install
+    docker exec -it lms_app npm install && npm run build
     docker exec -it lms_app php artisan migrate:fresh --seed
     ```
-    > [!IMPORTANT]
-    > **Admin Credentials**:
-    > - **Email**: `admin@lms.test`
-    > - **Password**: `password`
+
+### 💻 Option 2: Local Environment
+1.  **Prepare environment and dependencies**:
+    ```bash
+    cp .env.example .env
+    composer install
+    npm install && npm run build
+    ```
+2.  **Setup Database**:
+    Ensure you have a local MySQL/SQLite database configured in `.env`, then:
+    ```bash
+    php artisan migrate:fresh --seed
+    ```
+
+> [!IMPORTANT]
+> **Admin Credentials (post-seeding)**:
+> - **Email**: `admin@lms.test`
+> - **Password**: `password`
 
 ---
 
