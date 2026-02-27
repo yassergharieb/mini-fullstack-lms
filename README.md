@@ -38,14 +38,13 @@ The project is fully containerized using Docker for a consistent development exp
 -   **phpmyadmin**: Database management UI at `http://localhost:9000`.
 
 ### Quick Start
-1.  **Start the environment**:
+1.  **Install dependencies locally**:
+    ```bash
+    composer install
+    ```
+2.  **Start the environment**:
     ```bash
     docker-compose up -d
-    ```
-2.  **Install dependencies**:
-    ```bash
-    docker exec -it lms_app composer install
-    docker exec -it lms_app npm install && npm run build
     ```
 3.  **Setup Database**:
     ```bash
