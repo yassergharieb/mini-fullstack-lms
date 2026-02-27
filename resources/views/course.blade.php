@@ -85,7 +85,36 @@
         <div style="max-width: 1000px; margin: 0 auto;">
             <div class="video-player-container glass-card" x-ref="playerContainer">
                 @if($currentLesson && $currentLesson->video_url)
-                    <div class="player" data-plyr-provider="vimeo" data-plyr-embed-id="{{ $currentLesson->video_url }}"></div>
+                    @php
+                        $videoUrl = $currentLesson->video_url;
+                        $isExternal = str_starts_with($videoUrl, 'http') || str_starts_with($videoUrl, 'www');
+                        $provider = 'html5';
+                        $videoPath = '';
+
+                        if ($isExternal) {
+                            if (str_contains($videoUrl, 'youtube.com') || str_contains($videoUrl, 'youtu.be')) {
+                                $provider = 'youtube';
+                            } elseif (str_contains($videoUrl, 'vimeo.com')) {
+                                $provider = 'vimeo';
+                            }
+                            $videoPath = $videoUrl;
+                        } else {
+                            $alreadyHasStorage = str_starts_with($videoUrl, '/storage') || str_starts_with($videoUrl, 'storage/');
+                            $videoPath = $alreadyHasStorage 
+                                ? (str_starts_with($videoUrl, '/') ? $videoUrl : '/' . $videoUrl)
+                                : Storage::url($videoUrl);
+                        }
+                    @endphp
+
+                    @if($provider !== 'html5')
+                        {{-- External Embed (Vimeo/YouTube) --}}
+                        <div class="player" data-plyr-provider="{{ $provider }}" data-plyr-embed-id="{{ $videoPath }}"></div>
+                    @else
+                        {{-- Local HTML5 Video --}}
+                        <video class="player" playsinline controls>
+                            <source src="{{ $videoPath }}" type="video/mp4" />
+                        </video>
+                    @endif
                 @else
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; background: linear-gradient(135deg, #1e293b, #0f172a);">
                         <p style="margin-top: 1rem; font-weight: 600; color: var(--text-muted);">Select a lesson to start</p>
@@ -128,9 +157,9 @@
 
                 <div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
                     <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Lesson Description</h2>
-                    <p style="color: var(--text-muted); line-height: 1.8;">
-                        {{ $currentLesson->description ?? 'No description available for this lesson.' }}
-                    </p>
+                    <div style="color: var(--text-muted); line-height: 1.8;">
+                        {!! $currentLesson->description ?? 'No description available for this lesson.' !!}
+                    </div>
                 </div>
             </div>
         </div>
@@ -152,20 +181,29 @@
             player: null,
 
             init() {
-                this.initPlayer();
-            },
-
-            initPlayer() {
-                const checkPlayers = setInterval(() => {
-                    if (window.playerInstances && window.playerInstances.length > 0) {
-                        this.player = window.playerInstances[0];
-                        clearInterval(checkPlayers);
+                try {
+                    const playerElement = this.$refs.playerContainer.querySelector('.player');
+                    if (playerElement) {
+                        this.player = new Plyr(playerElement, {
+                            autoplay: false,
+                            hideControls: false,
+                            invertTime: false,
+                            toggleInvert: false,
+                        });
                         this.setupEvents();
                     }
-                }, 100);
+                } catch (e) {
+                    console.error('Plyr Init Error:', e);
+                }
             },
 
             setupEvents() {
+                if (!this.player) return;
+
+                this.player.on('ready', () => {
+                    console.log('Player ready');
+                });
+
                 this.player.on('timeupdate', () => {
                     const currentTime = Math.floor(this.player.currentTime);
                     if (currentTime - this.lastUpdateTime >= 10 || (this.player.percentage >= 95 && !this.isCompleted)) {

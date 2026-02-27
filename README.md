@@ -52,7 +52,7 @@ The project is fully containerized using Docker for a consistent development exp
     docker exec -it lms_app php artisan migrate:fresh --seed
     ```
 
-### 💻 Option 2: Local Environment
+### 💻 Option 2: Local Environment (Herd/Valet)
 1.  **Prepare environment and dependencies**:
     ```bash
     cp .env.example .env
@@ -63,6 +63,14 @@ The project is fully containerized using Docker for a consistent development exp
     ```bash
     php artisan migrate:fresh --seed
     ```
+
+> [!TIP]
+> **Using Laravel Herd?**
+> To support large video uploads, increase the limits in Herd:
+> 1. Open Herd Settings -> **PHP**.
+> 2. Select your version and click the **"Edit ini"** button (or open the config folder).
+> 3. Set `upload_max_filesize = 1G` and `post_max_size = 1G`.
+> 4. **Restart Herd** services.
 
 > [!IMPORTANT]
 > **Admin Credentials (post-seeding)**:

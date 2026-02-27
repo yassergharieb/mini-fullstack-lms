@@ -12,7 +12,10 @@
             @if($price === 'Enrolled')
                 <a href="{{ route('courses.play', $slug) }}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Continue Learning</a>
             @else
-                <a href="{{ route('courses.enroll', $slug) }}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Enroll</a>
+                <form action="{{ route('courses.enroll', $slug) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Enroll</button>
+                </form>
             @endif
         </div>
     </div>

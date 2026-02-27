@@ -51,10 +51,8 @@ class EnrollmentController extends Controller
     /**
      * Store a newly created enrollment.
      */
-    public function enroll(StoreEnrollmentRequest $request, $slug)
+    public function enroll(StoreEnrollmentRequest $request, \App\Models\Course $course)
     {
-        $course = \App\Models\Course::where('slug', $slug)->firstOrFail();
-        
         try {
             $this->enrollmentService->enroll(auth()->user(), $course);
             return redirect()->route('courses.play', $course->slug)->with('success', 'Enrolled successfully!');

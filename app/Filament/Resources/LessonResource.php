@@ -41,10 +41,14 @@ class LessonResource extends Resource
                 Forms\Components\RichEditor::make('description')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('video_url')
-                    ->url()
+                Forms\Components\FileUpload::make('video_url')
+                    ->label('Lesson Video')
+                    ->disk('local')
+                    ->directory('uploads/temp')
+                    ->preserveFilenames()
+                    ->maxSize(1024 * 1024) // 1GB in KB
                     ->required()
-                    ->maxLength(255),
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('duration')
                     ->numeric()
                     ->required()
@@ -104,10 +108,7 @@ class LessonResource extends Resource
     }
 
 
-    protected function afterCreate(): void
-    {
-        UploadVideoJob::dispatch($this->record);
-    }
+
 
     public static function getPages(): array
     {

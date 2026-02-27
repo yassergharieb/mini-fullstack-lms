@@ -18,7 +18,7 @@ class CourseSeeder extends Seeder
         $creator = User::first();
 
         foreach ($levels as $level) {
-            Course::factory(2)->create([
+            Course::factory(2)->published()->create([
                 'level_id' => $level->id,
                 'created_by' => $creator->id,
             ]);

@@ -25,7 +25,7 @@ class CourseFactory extends Factory
             'level_id' => \App\Models\Level::factory(),
             'created_by' => \App\Models\User::factory(),
              "price" => "100",
-             "is_published" => false,
+             "is_published" => true,
         ];
     }
 

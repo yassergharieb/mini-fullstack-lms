@@ -37,7 +37,7 @@ class UploadVideoJob implements ShouldQueue
         if (Storage::disk('public')->put($finalPath, Storage::disk('local')->get($this->tempPath))) {
             // Update Database
             $this->lesson->update([
-                'video_url' => Storage::url($finalPath),
+                'video_url' => $finalPath,
             ]);
 
             // Clean up temp file

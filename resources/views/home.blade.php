@@ -23,7 +23,7 @@
                         'cover_image' => $course->cover_image,
                         'level' => $course->level->name,
                         'name' => $course->name,
-                        'description' => Str::limit($course->description, 80),
+                        'description' => Str::limit(strip_tags($course->description), 80),
                         'price' => $isEnrolled ? 'Enrolled' : ($course->price > 0 ? '$' . number_format($course->price, 2) : 'Free'),
                         'slug' => $course->slug,
                         'style' => 'animation-delay: ' . ($loop->index * 0.1) . 's;'

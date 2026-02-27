@@ -103,7 +103,8 @@
                         @if($isEnrolled)
                             <a href="{{ route('courses.play', $course->slug) }}" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Continue Learning</a>
                         @else
-                            <form action="{{ route('courses.enroll', $course->slug) }}" method="GET">
+                            <form action="{{ route('courses.enroll', $course->slug) }}" method="POST">
+                                @csrf
                                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 1rem;">Enroll Now</button>
                             </form>
                         @endif

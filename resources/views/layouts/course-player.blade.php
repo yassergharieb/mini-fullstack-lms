@@ -55,7 +55,8 @@
         }
 
         .video-player-container iframe,
-        .video-player-container video {
+        .video-player-container video,
+        .video-player-container .plyr {
             position: absolute;
             top: 0;
             left: 0;
@@ -88,11 +89,6 @@
 
     @include('components.scripts')
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            window.playerInstances = Plyr.setup('.player');
-        });
-    </script>
     @stack('scripts')
 </body>
 </html>

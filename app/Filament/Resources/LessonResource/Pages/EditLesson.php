@@ -16,4 +16,17 @@ class EditLesson extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        $lesson = $this->record;
+        
+        if ($lesson->wasChanged('video_url') && !str_contains($lesson->video_url, 'storage/lessons')) {
+             \App\Jobs\UploadVideoJob::dispatch(
+                $lesson,
+                $lesson->video_url,
+                auth()->user()
+            );
+        }
+    }
 }
